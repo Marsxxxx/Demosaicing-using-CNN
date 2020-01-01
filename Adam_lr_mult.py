@@ -22,7 +22,11 @@ class Adam_lr_mult(Optimizer):
     AUTHOR: Erik Brorson
     """
 
-    def __init__(self, lr=0.001, beta_1=0.9, beta_2=0.999,
+    @property
+    def lr(self):
+        return self._lr
+
+    def __init__(self, lr=1, beta_1=0.9, beta_2=0.999,
                  epsilon=None, decay=0., amsgrad=False,
                  multipliers=None, debug_verbose=False, **kwargs):
         super(Adam_lr_mult, self).__init__(**kwargs)
@@ -109,3 +113,7 @@ class Adam_lr_mult(Optimizer):
                   'multipliers': self.multipliers}
         base_config = super(Adam_lr_mult, self).get_config()
         return dict(list(base_config.items()) + list(config.items()))
+
+    @lr.setter
+    def lr(self, value):
+        self._lr = value
