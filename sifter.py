@@ -9,8 +9,12 @@ import numpy as np
 
 
 training_path = "filtered_dataset/training"
+origin_training_path = "origin_filtered_dataset/training"
 val_path = "filtered_dataset/validation"
+origin_val_path = "origin_filtered_dataset/validation"
 mypath = "patches_dataset"
+origin_patches_path = "origin_patches_dataset"
+
 
 dirs = [f for f in listdir(mypath) if isdir(join(mypath, f))]
 
@@ -24,11 +28,15 @@ for dir in dirs:
         counter += 1
         if counter % 100 == 0:
             im = cv2.imread(join(mypath, dir, f))
+            original_im = cv2.imread(join(origin_patches_path, dir, f))
             if(dir == 'training'):
                 path = training_path
+                origin_path = origin_training_path
             else:
                 path = val_path
+                origin_path = origin_val_path
             cv2.imwrite(join(path, f), im)
+            cv2.imwrite(join(origin_path, f), original_im)
             counter = 0
 
 

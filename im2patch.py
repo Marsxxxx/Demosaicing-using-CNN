@@ -11,6 +11,7 @@ PATCH_SIZE = 33
 
 mypath = "dataset"
 newpath = "patches_dataset"
+origin_patches_path = "origin_patches_dataset"
 dirs = [f for f in listdir(mypath) if isdir(join(mypath, f))]
 
 def masks_CFA_Bayer(img):
@@ -56,10 +57,10 @@ def create_patches(img, patch_size, step_size):
             array_for_patches.append(curr_patch)
     return np.array(array_for_patches)
 
-def save_patches(patches, dir, f):
+def save_patches(patches, path, dir, f):
     i = 0
     for patch in patches:
-        cv2.imwrite(join(newpath, dir, str(i) + f), patch)
+        cv2.imwrite(join(path, dir, str(i) + f), patch)
         i += 1
 
 
@@ -71,8 +72,14 @@ for dir in dirs:
         mosaiced_image = mosaic(im)
         #show_image(mosaiced_image, "mosaiced image")
         patches = create_patches(mosaiced_image, PATCH_SIZE, PATCH_SIZE)
-        if(not isdir(newpath)):
+        origin_patches = create_patches(im, PATCH_SIZE, PATCH_SIZE)
+        if not isdir(newpath):
             mkdir(newpath)
-        if(not isdir(join(newpath, dir))):
+        if not isdir(join(newpath, dir)):
             mkdir(join(newpath, dir))
-        save_patches(patches, dir, f)
+        save_patches(patches, newpath, dir, f)
+        if not isdir(origin_patches_path):
+            mkdir(origin_patches_path)
+        if not isdir(join(origin_patches_path, dir)):
+            mkdir(join(origin_patches_path, dir))
+        save_patches(origin_patches, origin_patches_path, dir, f)
